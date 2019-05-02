@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name" translatable="false">Tooltip</string>
+    <string name="show_tooltip">Show Tooltip</string>
+    <string name="example">Example</string>
+</resources>
