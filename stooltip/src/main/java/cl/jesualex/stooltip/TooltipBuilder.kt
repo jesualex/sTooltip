@@ -184,11 +184,6 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
-    fun align(align: Align): TooltipBuilder {
-        tooltip.tooltipView.setAlign(align)
-        return this
-    }
-
     /**
     * Set [r] to 0 for disableShadow
     */
@@ -205,6 +200,16 @@ class TooltipBuilder(private val tooltip: Tooltip){
     @JvmOverloads fun animation(@AnimRes animIn: Int,@AnimRes animOut: Int = animIn): TooltipBuilder {
         tooltip.animIn = animIn
         tooltip.animOut = animOut
+        return this
+    }
+
+    fun minWidth(minWidth: Int): TooltipBuilder {
+        tooltip.tooltipView.minWidth =  minWidth
+        return this
+    }
+
+    fun minHeight(minHeight: Int): TooltipBuilder {
+        tooltip.tooltipView.minHeight =  minHeight
         return this
     }
 }

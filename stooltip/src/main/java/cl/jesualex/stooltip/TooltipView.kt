@@ -1,5 +1,6 @@
 package cl.jesualex.stooltip
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Build
@@ -25,9 +26,9 @@ class TooltipView : FrameLayout {
     private var arrowTargetMargin = 0
     private var color = 0xff1F7C82.toInt()
     private var bubblePath: Path? = null
-    private var align = Align.CENTER
     private var screenWidth = 0
     private var screenHeight = 0
+    private var hasInverted = false
     private lateinit var rect: Rect
 
     internal lateinit var childView: View
@@ -40,6 +41,8 @@ class TooltipView : FrameLayout {
     internal var shadowPadding = 0f
     internal var distanceWithView = 0
     internal var position = Position.BOTTOM
+    internal var minHeight = 0
+    internal var minWidth = 0
 
     @JvmOverloads constructor(
             context: Context,
@@ -66,38 +69,48 @@ class TooltipView : FrameLayout {
         addView(childView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         val res = context.resources
-        val p = res.getDimensionPixelSize(R.dimen.tooltipPadding)
+        val p = res.getDimensionPixelSize(R.dimen.padding)
 
         paddingL = p
         paddingT = p
         paddingR = p
         paddingB = p
 
-        corner = res.getDimensionPixelSize(R.dimen.tooltipCorner)
-        arrowHeight = res.getDimensionPixelSize(R.dimen.tooltipArrowH)
-        arrowWidth = res.getDimensionPixelSize(R.dimen.tooltipArrowW)
-        shadowPadding = res.getDimensionPixelSize(R.dimen.tooltipShadowPadding).toFloat()
-        screenBorderMargin = res.getDimensionPixelSize(R.dimen.tooltipScreenBorderMargin)
+        corner = res.getDimensionPixelSize(R.dimen.corner)
+        arrowHeight = res.getDimensionPixelSize(R.dimen.arrowH)
+        arrowWidth = res.getDimensionPixelSize(R.dimen.arrowW)
+        shadowPadding = res.getDimensionPixelSize(R.dimen.shadowPadding).toFloat()
+        screenBorderMargin = res.getDimensionPixelSize(R.dimen.screenBorderMargin)
+        minWidth = res.getDimensionPixelSize(R.dimen.minWidth)
+        minHeight = res.getDimensionPixelSize(R.dimen.minHeight)
 
         bubblePaint.color = color
         bubblePaint.style = Paint.Style.FILL
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, bubblePaint)
 
-        setShadow(res.getDimensionPixelSize(R.dimen.tooltipShadowW).toFloat())
+        setShadow(res.getDimensionPixelSize(R.dimen.shadowW).toFloat())
         setPosition()
     }
 
+    @SuppressLint("WrongCall")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val wSpec = MeasureSpec.getSize(widthMeasureSpec)
         val hSpec = MeasureSpec.getSize(heightMeasureSpec)
         val wCalculate = calculateWidth(rect, screenWidth, wSpec)
         val hCalculate = calculateHeight(rect, screenHeight, hSpec)
+        val margin = distanceWithView + screenBorderMargin
 
-        super.onMeasure(
-                MeasureSpec.makeMeasureSpec(wCalculate, MeasureSpec.AT_MOST),
-                MeasureSpec.makeMeasureSpec(hCalculate, MeasureSpec.AT_MOST)
-        )
+        if(!hasInverted && (wCalculate < minWidth + margin || hCalculate < minHeight + margin)){
+            invertCurrentPosition()
+            hasInverted = true
+            onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }else{
+            super.onMeasure(
+                    MeasureSpec.makeMeasureSpec(wCalculate, MeasureSpec.AT_MOST),
+                    MeasureSpec.makeMeasureSpec(hCalculate, MeasureSpec.AT_MOST)
+            )
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -133,6 +146,17 @@ class TooltipView : FrameLayout {
         bubblePaint.setShadowLayer(r, 0f, 0f, if(r == 0f) Color.TRANSPARENT else color)
     }
 
+    private fun invertCurrentPosition(){
+        position = when (position) {
+            Position.TOP -> Position.BOTTOM
+            Position.BOTTOM -> Position.TOP
+            Position.LEFT -> Position.RIGHT
+            Position.RIGHT -> Position.LEFT
+        }
+
+        setPosition()
+    }
+
     private fun setPosition() {
         when (position) {
             Position.TOP -> setPadding(paddingL, paddingT, paddingR, paddingB + arrowHeight)
@@ -145,16 +169,12 @@ class TooltipView : FrameLayout {
     }
 
     private fun drawBubble(rect: Rect, shadowRect: RectF, topLeftDiameter: Float, topRightDiameter: Float, bottomRightDiameter: Float, bottomLeftDiameter: Float): Path {
-        var topLeftDiameter = topLeftDiameter
-        var topRightDiameter = topRightDiameter
-        var bottomRightDiameter = bottomRightDiameter
-        var bottomLeftDiameter = bottomLeftDiameter
         val path = Path()
 
-        topLeftDiameter = if (topLeftDiameter < 0) 0f else topLeftDiameter
-        topRightDiameter = if (topRightDiameter < 0) 0f else topRightDiameter
-        bottomLeftDiameter = if (bottomLeftDiameter < 0) 0f else bottomLeftDiameter
-        bottomRightDiameter = if (bottomRightDiameter < 0) 0f else bottomRightDiameter
+        val topLeftD = if (topLeftDiameter < 0) 0f else topLeftDiameter
+        val topRightD = if (topRightDiameter < 0) 0f else topRightDiameter
+        val bottomLeftD = if (bottomLeftDiameter < 0) 0f else bottomLeftDiameter
+        val bottomRightD = if (bottomRightDiameter < 0) 0f else bottomRightDiameter
 
         val spacingLeft = (if (this.position == Position.RIGHT) arrowHeight else 0).toFloat()
         val spacingTop = (if (this.position == Position.BOTTOM) arrowHeight else 0).toFloat()
@@ -184,7 +204,7 @@ class TooltipView : FrameLayout {
         else
             bottom / 2f
 
-        path.moveTo(left + topLeftDiameter / 2f, top)
+        path.moveTo(left + topLeftD / 2f, top)
         //LEFT, TOP
 
         if (position == Position.BOTTOM) {
@@ -193,8 +213,8 @@ class TooltipView : FrameLayout {
             path.lineTo(arrowSourceX + arrowWidth, top)
         }
 
-        path.lineTo(right - topRightDiameter / 2f, top)
-        path.quadTo(right, top, right, top + topRightDiameter / 2)
+        path.lineTo(right - topRightD / 2f, top)
+        path.quadTo(right, top, right, top + topRightD / 2)
         //RIGHT, TOP
 
         if (position == Position.LEFT) {
@@ -203,8 +223,8 @@ class TooltipView : FrameLayout {
             path.lineTo(right, arrowSourceY + arrowWidth)
         }
 
-        path.lineTo(right, bottom - bottomRightDiameter / 2)
-        path.quadTo(right, bottom, right - bottomRightDiameter / 2, bottom)
+        path.lineTo(right, bottom - bottomRightD / 2)
+        path.quadTo(right, bottom, right - bottomRightD / 2, bottom)
         //RIGHT, BOTTOM
 
         if (position == Position.TOP) {
@@ -213,8 +233,8 @@ class TooltipView : FrameLayout {
             path.lineTo(arrowSourceX - arrowWidth, bottom)
         }
 
-        path.lineTo(left + bottomLeftDiameter / 2, bottom)
-        path.quadTo(left, bottom, left, bottom - bottomLeftDiameter / 2)
+        path.lineTo(left + bottomLeftD / 2, bottom)
+        path.quadTo(left, bottom, left, bottom - bottomLeftD / 2)
         //LEFT, BOTTOM
 
         if (position == Position.RIGHT) {
@@ -223,18 +243,24 @@ class TooltipView : FrameLayout {
             path.lineTo(left, arrowSourceY - arrowWidth)
         }
 
-        path.lineTo(left, top + topLeftDiameter / 2)
-        path.quadTo(left, top, left + topLeftDiameter / 2, top)
+        path.lineTo(left, top + topLeftD / 2)
+        path.quadTo(left, top, left + topLeftD / 2, top)
         path.close()
 
         return path
     }
 
-    private fun getAlignOffset(myLength: Int, hisLength: Int): Int {
-        return when (align) {
-            Align.END -> hisLength - myLength
-            Align.CENTER -> (hisLength - myLength) / 2
-            else -> 0
+    private fun getOffset(myLength: Int, hisLength: Int): Int {
+        return (hisLength - myLength) / 2
+    }
+
+    private fun calculatePosition(offset: Int, size: Int, begin: Int, maxVal: Int): Int{
+        val pos = begin + offset
+
+        return if(begin + offset + size > maxVal){
+            pos - (pos + size - maxVal)
+        }else{
+            pos
         }
     }
 
@@ -249,7 +275,12 @@ class TooltipView : FrameLayout {
                 rect.right + distanceWithView
             }
 
-            y = rect.top + getAlignOffset(height, rect.height())
+            y = calculatePosition(
+                    getOffset(height, rect.height()),
+                    height,
+                    rect.top,
+                    calculateHeight(rect, screenHeight, screenHeight)
+            )
         } else {
             y = if (position == Position.BOTTOM) {
                 rect.bottom + distanceWithView
@@ -257,7 +288,12 @@ class TooltipView : FrameLayout {
                 rect.top - height - distanceWithView
             }
 
-            x = rect.left + getAlignOffset(width, rect.width())
+            x = calculatePosition(
+                    getOffset(width, rect.width()),
+                    width,
+                    rect.left,
+                    calculateWidth(rect, screenWidth, screenWidth)
+            )
         }
 
         translationX = x.toFloat()
@@ -293,11 +329,6 @@ class TooltipView : FrameLayout {
         }else {
             height
         }
-    }
-
-    fun setAlign(align: Align) {
-        this.align = align
-        postInvalidate()
     }
 
     fun setColor(color: Int) {

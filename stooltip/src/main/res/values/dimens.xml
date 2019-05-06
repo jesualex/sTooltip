@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="tooltipIconRightMargin">6dp</dimen>
-    <dimen name="tooltipCorner">5dp</dimen>
-    <dimen name="tooltipPadding">8dp</dimen>
-    <dimen name="tooltipArrowH">4dp</dimen>
-    <dimen name="tooltipArrowW">4dp</dimen>
-    <dimen name="tooltipShadowPadding">1dp</dimen>
-    <dimen name="tooltipShadowW">2dp</dimen>
-    <dimen name="tooltipScreenBorderMargin">6dp</dimen>
+    <dimen name="iconRightMargin">6dp</dimen>
+    <dimen name="corner">5dp</dimen>
+    <dimen name="padding">8dp</dimen>
+    <dimen name="arrowH">4dp</dimen>
+    <dimen name="arrowW">4dp</dimen>
+    <dimen name="shadowPadding">1dp</dimen>
+    <dimen name="shadowW">2dp</dimen>
+    <dimen name="screenBorderMargin">6dp</dimen>
+    <dimen name="minWidth">20dp</dimen>
+    <dimen name="minHeight">15dp</dimen>
 </resources>

@@ -39,7 +39,11 @@ class ChildView : LinearLayout {
         icon = ImageView(context, attrs, defStyleAttr)
 
         val iconLP = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        iconLP.marginEnd = context.resources.getDimensionPixelSize(R.dimen.tooltipIconRightMargin)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            iconLP.marginEnd = context.resources.getDimensionPixelSize(R.dimen.iconRightMargin)
+        }else{
+            iconLP.rightMargin = context.resources.getDimensionPixelSize(R.dimen.iconRightMargin)
+        }
         iconLP.gravity = Gravity.CENTER
         icon.visibility = View.GONE
 
