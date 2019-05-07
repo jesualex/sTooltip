@@ -19,23 +19,25 @@ class Tooltip private constructor(private val activity: Activity, private val re
     internal val overlay: FrameLayout = FrameLayout(activity)
     internal var clickToHide: Boolean = true
     internal var displayListener: DisplayListener? = null
-    internal var tooltipClickListener: View.OnClickListener? = null
-    internal var refViewClickListener: View.OnClickListener? = null
+    internal var tooltipClickListener: TooltipClickListener? = null
+    internal var refViewClickListener: TooltipClickListener? = null
     internal var animIn = 0
     internal var animOut = 0
 
     init {
-        findScrollParent(refView)?.let { scrollParent ->
-            scrollParent.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener {
-                _, scrollX, scrollY, oldScrollX, oldScrollY ->
+        if(rootView?.let{return@let findScrollParent(it)} == null){
+            findScrollParent(refView)?.let { scrollParent ->
+                scrollParent.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener {
+                    _, scrollX, scrollY, oldScrollX, oldScrollY ->
 
-                tooltipView.translationY -= (scrollY - oldScrollY)
-                tooltipView.translationX -= (scrollX - oldScrollX)
-            })
+                    tooltipView.translationY -= (scrollY - oldScrollY)
+                    tooltipView.translationX -= (scrollX - oldScrollX)
+                })
+            }
         }
 
         tooltipView.setOnClickListener {
-            tooltipClickListener?.onClick(tooltipView)
+            tooltipClickListener?.onClick(tooltipView, this)
 
             if (clickToHide) {
                close()
@@ -62,14 +64,18 @@ class Tooltip private constructor(private val activity: Activity, private val re
             activity.window.decorView as ViewGroup
 
         val rect = Rect()
+        val decorRect = Rect()
         refView.getGlobalVisibleRect(rect)
+        decorView.getGlobalVisibleRect(decorRect)
 
-        val location = IntArray(2)
-        refView.getLocationOnScreen(location)
-        rect.left = location[0]
+        tooltipView.setup(rect, decorRect)
 
-        tooltipView.setup(rect, decorView.width, decorView.height)
-        decorView.addView(overlay, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val lP = ViewGroup.LayoutParams(
+                decorView.width,
+                decorView.height
+        )
+
+        decorView.addView(overlay, lP)
 
         if(animIn == 0){
             displayListener?.onDisplay(tooltipView, true)
@@ -130,7 +136,11 @@ class Tooltip private constructor(private val activity: Activity, private val re
         val targetGhostView = TargetView(activity)
         targetGhostView.setTarget(refView)
         overlay.addView(targetGhostView)
-        targetGhostView.setOnClickListener { refViewClickListener?.onClick(targetGhostView)}
+        targetGhostView.setOnClickListener { refViewClickListener?.onClick(targetGhostView, this)}
+    }
+
+    internal fun setOverlayListener(overlayClickListener: TooltipClickListener){
+        overlay.setOnClickListener { overlayClickListener.onClick(it, this) }
     }
 
     companion object{

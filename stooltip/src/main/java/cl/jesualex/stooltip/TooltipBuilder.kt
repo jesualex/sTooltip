@@ -8,6 +8,7 @@ import android.support.annotation.AnimRes
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -45,6 +46,12 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
+    fun text(text: Spanned): TooltipBuilder {
+        getTextView()?.text = text
+
+        return this
+    }
+
     fun text(@StringRes text: Int): TooltipBuilder {
         getTextView()?.setText(text)
 
@@ -63,6 +70,11 @@ class TooltipBuilder(private val tooltip: Tooltip){
 
     fun textSize(unit: Int, textSize: Float): TooltipBuilder {
         getTextView()?.setTextSize(unit, textSize)
+        return this
+    }
+
+    fun textSize(textSize: Float): TooltipBuilder {
+        getTextView()?.textSize = textSize
         return this
     }
 
@@ -124,7 +136,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
-    fun padding(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
+    fun padding(top: Int, right: Int, bottom: Int, left: Int): TooltipBuilder {
         tooltip.tooltipView.paddingT = top
         tooltip.tooltipView.paddingB = bottom
         tooltip.tooltipView.paddingL = left
@@ -167,20 +179,20 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
-    fun tooltipClickListener(listener: View.OnClickListener): TooltipBuilder {
+    fun tooltipClickListener(listener: TooltipClickListener): TooltipBuilder {
         tooltip.tooltipClickListener = listener
         return this
     }
 
-    fun refViewClickListener(listener: View.OnClickListener): TooltipBuilder {
+    fun refViewClickListener(listener: TooltipClickListener): TooltipBuilder {
         tooltip.refViewClickListener = listener
         return this
     }
 
-    @JvmOverloads fun overlay(@ColorInt color: Int, listener: View.OnClickListener? = null): TooltipBuilder {
+    @JvmOverloads fun overlay(@ColorInt color: Int, listener: TooltipClickListener? = null): TooltipBuilder {
         tooltip.overlay.setBackgroundColor(color)
         tooltip.initTargetClone()
-        listener?.let { tooltip.overlay.setOnClickListener(listener) }
+        listener?.let { tooltip.setOverlayListener(listener) }
         return this
     }
 
@@ -210,6 +222,19 @@ class TooltipBuilder(private val tooltip: Tooltip){
 
     fun minHeight(minHeight: Int): TooltipBuilder {
         tooltip.tooltipView.minHeight =  minHeight
+        return this
+    }
+
+    fun arrowSize(h: Int, w: Int): TooltipBuilder {
+        tooltip.tooltipView.arrowHeight = h
+        tooltip.tooltipView.arrowWidth = w
+
+        return this
+    }
+
+    fun borderMargin(margin: Int): TooltipBuilder {
+        tooltip.tooltipView.lMargin = margin
+
         return this
     }
 }
