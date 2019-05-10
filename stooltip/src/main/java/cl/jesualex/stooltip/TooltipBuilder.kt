@@ -24,67 +24,51 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return tooltip.show(duration)
     }
 
-    private fun getTextView(): TextView?{
-        return when (val childView = tooltip.tooltipView.childView) {
-            is ChildView -> childView.getTextView()
-            is TextView -> childView
-            else -> null
-        }
-    }
-
-    private fun getImageView(): ImageView?{
-        return when (val childView = tooltip.tooltipView.childView) {
-            is ChildView -> childView.getImageView()
-            is ImageView -> childView
-            else -> null
-        }
-    }
-
     fun text(text: String): TooltipBuilder {
-        getTextView()?.text = text
+        tooltip.getTextView()?.text = text
 
         return this
     }
 
     fun text(text: Spanned): TooltipBuilder {
-        getTextView()?.text = text
+        tooltip.getTextView()?.text = text
 
         return this
     }
 
     fun text(@StringRes text: Int): TooltipBuilder {
-        getTextView()?.setText(text)
+        tooltip.getTextView()?.setText(text)
 
         return this
     }
 
     fun textColor(@ColorInt textColor: Int): TooltipBuilder {
-        getTextView()?.setTextColor(textColor)
+        tooltip.getTextView()?.setTextColor(textColor)
         return this
     }
 
     fun textTypeFace(typeface: Typeface): TooltipBuilder {
-        getTextView()?.typeface = typeface
+        tooltip.getTextView()?.typeface = typeface
         return this
     }
 
     fun textSize(unit: Int, textSize: Float): TooltipBuilder {
-        getTextView()?.setTextSize(unit, textSize)
+        tooltip.getTextView()?.setTextSize(unit, textSize)
         return this
     }
 
     fun textSize(textSize: Float): TooltipBuilder {
-        getTextView()?.textSize = textSize
+        tooltip.getTextView()?.textSize = textSize
         return this
     }
 
     fun textGravity(textGravity: Int): TooltipBuilder {
-        getTextView()?.gravity = textGravity
+        tooltip.getTextView()?.gravity = textGravity
         return this
     }
 
     fun icon(@DrawableRes iconRes: Int): TooltipBuilder {
-        getImageView()?.let {
+        tooltip.getImageView()?.let {
             it.setImageResource(iconRes)
             it.visibility = View.VISIBLE
         }
@@ -92,7 +76,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun icon(icon: Drawable): TooltipBuilder {
-        getImageView()?.let {
+        tooltip.getImageView()?.let {
             it.setImageDrawable(icon)
             it.visibility = View.VISIBLE
         }
@@ -100,7 +84,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun icon(icon: Bitmap): TooltipBuilder {
-        getImageView()?.let {
+        tooltip.getImageView()?.let {
             it.setImageBitmap(icon)
             it.visibility = View.VISIBLE
         }
@@ -108,7 +92,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun iconMargin(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
-        getImageView()?.let {
+        tooltip.getImageView()?.let {
             val lp = it.layoutParams
 
             if(lp is FrameLayout.LayoutParams){
@@ -121,7 +105,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun iconSize(h: Int, w: Int): TooltipBuilder {
-        getImageView()?.let {
+        tooltip.getImageView()?.let {
             val lp = it.layoutParams
             lp.height = h
             lp.width = w

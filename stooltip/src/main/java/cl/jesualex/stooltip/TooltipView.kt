@@ -96,8 +96,8 @@ class TooltipView : FrameLayout {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val wSpec = MeasureSpec.getSize(widthMeasureSpec)
         val hSpec = MeasureSpec.getSize(heightMeasureSpec)
-        val wCalculate = calculateWidth(rect, screenRect.width(), wSpec)
-        val hCalculate = calculateHeight(rect, screenRect.height(), hSpec)
+        val wCalculate = calculateWidth(wSpec)
+        val hCalculate = calculateHeight(hSpec)
         val margin = distanceWithView + lMargin
 
         if(!hasInverted && (wCalculate < minWidth + margin || hCalculate < minHeight + margin)){
@@ -256,7 +256,7 @@ class TooltipView : FrameLayout {
     private fun calculatePosition(offset: Int, size: Int, begin: Int, maxVal: Int): Int{
         val pos = begin + offset
 
-        return if(pos + size > maxVal){
+        return if(pos < 0 || pos + size > maxVal){
             pos - (pos + size - maxVal)
         }else{
             pos
@@ -278,7 +278,7 @@ class TooltipView : FrameLayout {
                     getOffset(height, rect.height()),
                     height,
                     if(rect.top < + lMargin) lMargin else rect.top,
-                    calculateHeight(rect, screenRect.height(), screenRect.height()) + lMargin
+                    calculateHeight(screenRect.height()) + lMargin
             )
         } else {
             y = if (position == Position.BOTTOM) {
@@ -291,7 +291,7 @@ class TooltipView : FrameLayout {
                     getOffset(width, rect.width()),
                     width,
                     if(rect.left < lMargin) lMargin else rect.left,
-                    calculateWidth(rect, screenRect.width(), screenRect.width()) + lMargin
+                    calculateWidth(screenRect.width()) + lMargin
             )
         }
 
@@ -305,37 +305,37 @@ class TooltipView : FrameLayout {
         this.rect = viewRect
     }
 
-    private fun calculateWidth(rect: Rect, screenWidth: Int, width: Int): Int {
+    private fun calculateWidth(width: Int): Int {
         return  if (position == Position.LEFT &&
                 width > rect.left - lMargin - distanceWithView
         ) {
             rect.left - lMargin - distanceWithView
-        } else if (position == Position.RIGHT && rect.right + width >
-                screenWidth - rect.right - lMargin - distanceWithView
+        } else if (position == Position.RIGHT && rect.right + screenRect.left + width >
+                screenRect.width() - rect.right + screenRect.left - lMargin - distanceWithView
         ) {
-            screenWidth - rect.right - lMargin - distanceWithView
+            screenRect.width() - rect.right + screenRect.left - lMargin - distanceWithView
         } else if ((position == Position.TOP || position == Position.BOTTOM)
-                && width > screenWidth - (lMargin * 2)
+                && width > screenRect.width() - (lMargin * 2)
         ) {
-            screenWidth - (lMargin * 2)
+            screenRect.width() - (lMargin * 2)
         }else {
             width
         }
     }
 
-    private fun calculateHeight(rect: Rect, screenHeight: Int, height: Int): Int {
+    private fun calculateHeight(height: Int): Int {
         return  if (position == Position.TOP &&
                 height > rect.top - lMargin - distanceWithView
         ) {
             rect.top - lMargin - distanceWithView
-        } else if (position == Position.BOTTOM && rect.bottom + height >
-                screenHeight - rect.bottom - lMargin - distanceWithView
+        } else if (position == Position.BOTTOM && rect.bottom + screenRect.top + height >
+                screenRect.height() - rect.bottom + screenRect.top - lMargin - distanceWithView
         ) {
-            screenHeight - rect.bottom - lMargin - distanceWithView
+            screenRect.height() - rect.bottom + screenRect.top - lMargin - distanceWithView
         } else if ((position == Position.LEFT || position == Position.RIGHT) &&
-                height > screenHeight - (lMargin * 2)
+                height > screenRect.height() - (lMargin * 2)
         ) {
-            screenHeight - (lMargin * 2)
+            screenRect.height() - (lMargin * 2)
         }else {
             height
         }

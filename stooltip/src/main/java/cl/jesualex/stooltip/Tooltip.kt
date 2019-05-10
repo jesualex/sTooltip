@@ -4,12 +4,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Rect
+import android.support.annotation.StringRes
 import android.support.v4.widget.NestedScrollView
+import android.text.Spannable
+import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 
 /**
  * Created by jesualex on 2019-04-25.
@@ -55,8 +60,26 @@ class Tooltip private constructor(private val activity: Activity, private val re
         }
     }
 
-    @JvmOverloads fun show(duration: Long = 0): Tooltip{
+    internal fun getTextView(): TextView?{
+        return when (val childView = tooltipView.childView) {
+            is ChildView -> childView.getTextView()
+            is TextView -> childView
+            else -> null
+        }
+    }
+
+    internal fun getImageView(): ImageView?{
+        return when (val childView = tooltipView.childView) {
+            is ChildView -> childView.getImageView()
+            is ImageView -> childView
+            else -> null
+        }
+    }
+
+    @JvmOverloads fun show(duration: Long = 0, text: String? = null): Tooltip{
         closeNow()
+
+        text?.let { getTextView()?.text = it }
 
         val decorView = if (rootView != null)
             rootView as ViewGroup
@@ -100,6 +123,31 @@ class Tooltip private constructor(private val activity: Activity, private val re
         }
 
         return this
+    }
+
+    fun show(duration: Long, @StringRes text: Int): Tooltip{
+        getTextView()?.setText(text)
+        return show(duration)
+    }
+
+    fun show(duration: Long, text: Spanned): Tooltip{
+        getTextView()?.text = text
+        return show(duration)
+    }
+
+    fun show(@StringRes text: Int): Tooltip{
+        getTextView()?.setText(text)
+        return show()
+    }
+
+    fun show(text: Spanned): Tooltip{
+        getTextView()?.text = text
+        return show()
+    }
+
+    fun show(text: String): Tooltip{
+        getTextView()?.text = text
+        return show()
     }
 
     fun close(){

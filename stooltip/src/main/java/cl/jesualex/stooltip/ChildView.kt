@@ -39,16 +39,17 @@ class ChildView : LinearLayout {
         icon = ImageView(context, attrs, defStyleAttr)
 
         val iconLP = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        val textLP = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             iconLP.marginEnd = context.resources.getDimensionPixelSize(R.dimen.iconRightMargin)
         }else{
             iconLP.rightMargin = context.resources.getDimensionPixelSize(R.dimen.iconRightMargin)
         }
+
+        textLP.gravity = Gravity.CENTER
         iconLP.gravity = Gravity.CENTER
         icon.visibility = View.GONE
-
-        val textLP = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
-        iconLP.gravity = Gravity.CENTER
 
         addView(icon, iconLP)
         addView(textView, textLP)
