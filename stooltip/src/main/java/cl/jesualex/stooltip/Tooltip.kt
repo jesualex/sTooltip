@@ -174,9 +174,10 @@ class Tooltip private constructor(private val activity: Activity, private val re
         val parent = overlay.parent
 
         if (parent != null && parent is ViewGroup) {
-            parent.removeView(overlay)
-
-            displayListener?.onDisplay(tooltipView, false)
+            parent.post {
+                parent.removeView(overlay)
+                displayListener?.onDisplay(tooltipView, false)
+            }
         }
     }
 
