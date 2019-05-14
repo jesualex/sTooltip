@@ -77,49 +77,51 @@ class Tooltip private constructor(private val activity: Activity, private val re
     }
 
     @JvmOverloads fun show(duration: Long = 0, text: String? = null): Tooltip{
-        closeNow()
+        refView.post {
+            closeNow()
 
-        text?.let { getTextView()?.text = it }
+            text?.let { getTextView()?.text = it }
 
-        val decorView = if (rootView != null)
-            rootView as ViewGroup
-        else
-            activity.window.decorView as ViewGroup
+            val decorView = if (rootView != null)
+                rootView as ViewGroup
+            else
+                activity.window.decorView as ViewGroup
 
-        val rect = Rect()
-        val decorRect = Rect()
-        refView.getGlobalVisibleRect(rect)
-        decorView.getGlobalVisibleRect(decorRect)
+            val rect = Rect()
+            val decorRect = Rect()
+            refView.getGlobalVisibleRect(rect)
+            decorView.getGlobalVisibleRect(decorRect)
 
-        tooltipView.setup(rect, decorRect)
+            tooltipView.setup(rect, decorRect)
 
-        val lP = ViewGroup.LayoutParams(
-                decorView.width,
-                decorView.height
-        )
+            val lP = ViewGroup.LayoutParams(
+                    decorView.width,
+                    decorView.height
+            )
 
-        decorView.addView(overlay, lP)
+            decorView.addView(overlay, lP)
 
-        if(animIn == 0){
-            displayListener?.onDisplay(tooltipView, true)
-        }else{
-            val animation = AnimationUtils.loadAnimation(tooltipView.context, animIn)
+            if(animIn == 0){
+                displayListener?.onDisplay(tooltipView, true)
+            }else{
+                val animation = AnimationUtils.loadAnimation(tooltipView.context, animIn)
 
-            animation.setAnimationListener(object :Animation.AnimationListener{
-                override fun onAnimationRepeat(p0: Animation?) {}
+                animation.setAnimationListener(object :Animation.AnimationListener{
+                    override fun onAnimationRepeat(p0: Animation?) {}
 
-                override fun onAnimationEnd(p0: Animation?) {
-                    displayListener?.onDisplay(tooltipView, true)
-                }
+                    override fun onAnimationEnd(p0: Animation?) {
+                        displayListener?.onDisplay(tooltipView, true)
+                    }
 
-                override fun onAnimationStart(p0: Animation?) {}
-            })
+                    override fun onAnimationStart(p0: Animation?) {}
+                })
 
-            tooltipView.startAnimation(animation)
-        }
+                tooltipView.startAnimation(animation)
+            }
 
-        if (duration > 0) {
-            tooltipView.postDelayed({ close() }, duration)
+            if (duration > 0) {
+                tooltipView.postDelayed({ close() }, duration)
+            }
         }
 
         return this
@@ -152,7 +154,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
 
     fun close(){
         if(animOut == 0){
-            closeNow()
+            refView.post { closeNow() }
         }else{
             val animation = AnimationUtils.loadAnimation(tooltipView.context, animOut)
 
@@ -160,7 +162,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
                 override fun onAnimationRepeat(p0: Animation?) {}
 
                 override fun onAnimationEnd(p0: Animation?) {
-                    closeNow()
+                    refView.post { closeNow() }
                 }
 
                 override fun onAnimationStart(p0: Animation?) {}
@@ -174,10 +176,8 @@ class Tooltip private constructor(private val activity: Activity, private val re
         val parent = overlay.parent
 
         if (parent != null && parent is ViewGroup) {
-            parent.post {
-                parent.removeView(overlay)
-                displayListener?.onDisplay(tooltipView, false)
-            }
+            parent.removeView(overlay)
+            displayListener?.onDisplay(tooltipView, false)
         }
     }
 
