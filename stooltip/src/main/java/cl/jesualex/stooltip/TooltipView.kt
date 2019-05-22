@@ -256,8 +256,10 @@ class TooltipView : FrameLayout {
     private fun calculatePosition(offset: Int, size: Int, begin: Int, maxVal: Int): Int{
         val pos = begin + offset
 
-        return if(pos < 0 || pos + size > maxVal){
-            pos - (pos + size - maxVal)
+        return if(pos < 0 && begin + size < maxVal){
+            begin
+        }else if(pos < 0 || pos + size > maxVal){
+            maxVal - size
         }else{
             pos
         }
