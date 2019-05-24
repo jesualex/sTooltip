@@ -1,8 +1,9 @@
 package cl.jesualex.tooltip
 
+import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import cl.jesualex.stooltip.Position
 import cl.jesualex.stooltip.Tooltip
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,6 +22,10 @@ class MainActivity : AppCompatActivity() {
                 .iconSize(30, 30)
                 .color(resources.getColor(R.color.colorPrimary))
                 .overlay(resources.getColor(R.color.overlay))
+                .border(Color.BLACK, 1f)
+                .clickToHide(true)
+                .corner(5)
+                .position(Position.TOP)
                 .show(3000)
         }
     }
