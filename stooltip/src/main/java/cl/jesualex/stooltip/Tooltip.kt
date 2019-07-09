@@ -48,6 +48,15 @@ class Tooltip private constructor(private val activity: Activity, private val re
                close()
             }
         }
+
+        refView.addOnAttachStateChangeListener( object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(v: View?) {
+                closeNow()
+                v?.removeOnAttachStateChangeListener(this)
+            }
+
+            override fun onViewAttachedToWindow(v: View?) {}
+        })
     }
 
     private fun findScrollParent(view: View): NestedScrollView? {
@@ -154,7 +163,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
 
     fun close(){
         if(animOut == 0){
-            refView.post { closeNow() }
+            overlay.post { closeNow() }
         }else{
             val animation = AnimationUtils.loadAnimation(tooltipView.context, animOut)
 
@@ -162,7 +171,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
                 override fun onAnimationRepeat(p0: Animation?) {}
 
                 override fun onAnimationEnd(p0: Animation?) {
-                    refView.post { closeNow() }
+                    overlay.post { closeNow() }
                 }
 
                 override fun onAnimationStart(p0: Animation?) {}
