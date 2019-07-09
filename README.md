@@ -1,7 +1,7 @@
 # sTooltip
 sTooltip is a simple Tooltip flexible and self-adjusting kotlin Library for Android.
 
-[ ![Download](https://api.bintray.com/packages/jesualex/sTooltip/cl.jesualex.stooltip/images/download.svg?version=1.0) ](https://bintray.com/jesualex/sTooltip/cl.jesualex.stooltip/1.0/link)
+[ ![Download](https://api.bintray.com/packages/jesualex/sTooltip/cl.jesualex.stooltip/images/download.svg) ](https://bintray.com/jesualex/sTooltip/cl.jesualex.stooltip/_latestVersion)
 
 ## Easy Use:
 

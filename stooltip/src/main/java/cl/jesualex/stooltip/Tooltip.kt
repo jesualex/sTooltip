@@ -203,7 +203,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
 
     companion object{
         @JvmStatic @JvmOverloads fun on(refView: View, rootView: View? = null): TooltipBuilder {
-            return getActivity(refView.context)!!.let {
+            getActivity(refView.context)!!.let {
                 return TooltipBuilder(Tooltip(it, refView, rootView))
             }
         }

@@ -1,10 +1,12 @@
-package cl.jesualex.tooltip
+package cl.jesualex.tooltip.main.activity
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
 import cl.jesualex.stooltip.Position
 import cl.jesualex.stooltip.Tooltip
+import cl.jesualex.tooltip.R
+import cl.jesualex.tooltip.main.fragment.TestFragment
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -27,6 +29,14 @@ class MainActivity : AppCompatActivity() {
                 .corner(5)
                 .position(Position.TOP)
                 .show(3000)
+        }
+
+        addFragmentButton.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragmentContainer, TestFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

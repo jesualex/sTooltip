@@ -1,4 +1,5 @@
 <resources>
     <string name="show_tooltip">Ver Tooltip</string>
     <string name="example">Ejemplo</string>
+    <string name="addFragment">Añadir Fragmento</string>
 </resources>

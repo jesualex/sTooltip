@@ -41,50 +41,7 @@ class TargetView(context: Context): AppCompatImageView(context) {
         size[1] = bitmap.height
     }
 
-    fun createDrawableFromView(activity: Activity, view: View): Bitmap {
-        val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        view.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
-        view.buildDrawingCache()
-        val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
-
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-
-        return bitmap
-    }
-
-    fun loadBitmapFromView(v: View): Bitmap {
-        if (v.measuredHeight <= 0) {
-            val specWidth = View.MeasureSpec.makeMeasureSpec(0 /* any */, View.MeasureSpec.UNSPECIFIED)
-            v.measure(specWidth, specWidth)
-            val questionWidth = v.measuredWidth
-
-            val specHeight = View.MeasureSpec.makeMeasureSpec(0 /* any */, View.MeasureSpec.UNSPECIFIED)
-            v.measure(specHeight, specHeight)
-            val questionHeight = v.measuredHeight
-
-            v.measure(questionWidth, questionHeight)
-
-            val b = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
-            val c = Canvas(b)
-            v.layout(0, 0, v.measuredWidth, v.measuredHeight)
-            v.draw(c)
-            return b
-        }
-
-        val b = Bitmap.createBitmap(v.layoutParams.width, v.layoutParams.height, Bitmap.Config.ARGB_8888)
-        val c = Canvas(b)
-        v.layout(v.left, v.top, v.right, v.bottom)
-        v.draw(c)
-
-
-        return b
-    }
-
-    fun getBitmapFromView(view: View): Bitmap? {
+    private fun getBitmapFromView(view: View): Bitmap? {
         val width = view.width
         val height = view.height
 
