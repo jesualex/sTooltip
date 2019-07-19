@@ -6,6 +6,7 @@ import android.graphics.*
 import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.annotation.RequiresApi
+import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -297,7 +298,9 @@ class TooltipView : FrameLayout {
             )
         }
 
-        translationX = (x - screenRect.left).toFloat()
+        val rtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL
+
+        translationX = (x - screenRect.left).toFloat() * if(rtl) -1 else 1
         translationY = (y - screenRect.top).toFloat()
     }
 

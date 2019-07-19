@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-ext.versionName = "1.1"
+ext.versionName = "1.2"
 
 android {
     compileSdkVersion 28
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 2
+        versionCode 3
         versionName versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
