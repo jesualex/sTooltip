@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
                 .iconSize(30, 30)
                 .color(resources.getColor(R.color.colorPrimary))
                 .overlay(resources.getColor(R.color.overlay))
+                .drawableRight(R.drawable.ic_android_black_24dp)
                 .border(Color.BLACK, 1f)
                 .clickToHide(true)
                 .corner(5)
