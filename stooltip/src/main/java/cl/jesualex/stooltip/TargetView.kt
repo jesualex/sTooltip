@@ -1,14 +1,11 @@
 package cl.jesualex.stooltip
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.support.v7.widget.AppCompatImageView
-import android.util.DisplayMetrics
 import android.view.View
-import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatImageView
 
 /**
  * Created by jesualex on 2019-04-29.

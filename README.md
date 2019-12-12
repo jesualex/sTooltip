@@ -84,14 +84,29 @@ Once the builder has been initialized, you can configure your tooltip, below you
 * To set text gravity
 `builder.textGravity(TextViewGravity)`
 
-* To enable a left icon(by default disabled)
-`builder.icon(icon)`
+* To enable a start icon(by default disabled)
+`builder.iconStart(icon)`
 
-* To set the icon margin in px
-`builder.iconMargin(left, top, right, bottom)`
+* To set the start icon margin in px
+`builder.iconStartMargin(left, top, right, bottom)`
 
-* To set the icon size in px
-`builder.iconSize(h, w)`
+* To set the start icon size in px
+`builder.iconStartSize(h, w)`
+
+* To enable a end icon(by default disabled)
+`builder.iconEnd(icon)`
+
+* To set the end icon margin in px
+`builder.iconEndMargin(left, top, right, bottom)`
+
+* To set the end icon size in px
+`builder.iconEndSize(h, w)`
+
+* To set a top drawable
+`builder.drawableTop(drawable)`
+
+* To set a bottom drawable
+`builder.drawableBottom(drawable)`
 
 * To set the tooltip bubble color
 `builder.color(color)`

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="iconRightMargin">6dp</dimen>
+    <dimen name="iconTextMargin">6dp</dimen>
     <dimen name="corner">5dp</dimen>
     <dimen name="padding">8dp</dimen>
     <dimen name="arrowH">4dp</dimen>

@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.os.Build
-import android.support.annotation.ColorInt
-import android.support.annotation.RequiresApi
-import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.ColorInt
+import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
 import java.util.*
 
 /**
@@ -28,13 +28,13 @@ class TooltipView : FrameLayout {
     private lateinit var screenRect: Rect
     private lateinit var rect: Rect
 
-    internal lateinit var childView: View
+    internal lateinit var childView: ChildView
     internal var borderPaint: Paint? = null
     internal var corner = 0
     internal var paddingT = 0
     internal var paddingB = 0
-    internal var paddingR = 0
-    internal var paddingL = 0
+    internal var paddingE = 0
+    internal var paddingS = 0
     internal var shadowPadding = 0f
     internal var distanceWithView = 0
     internal var position = Position.BOTTOM
@@ -65,15 +65,15 @@ class TooltipView : FrameLayout {
         setWillNotDraw(false)
 
         this.childView = ChildView(context, attrs, defStyleAttr)
-        (childView as ChildView).getTextView().setTextColor(Color.WHITE)
+        childView.getTextView().setTextColor(Color.WHITE)
         addView(childView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         val res = context.resources
         val p = res.getDimensionPixelSize(R.dimen.padding)
 
-        paddingL = p
+        paddingS = p
         paddingT = p
-        paddingR = p
+        paddingE = p
         paddingB = p
 
         corner = res.getDimensionPixelSize(R.dimen.corner)
@@ -159,16 +159,23 @@ class TooltipView : FrameLayout {
 
     private fun setPosition() {
         when (position) {
-            Position.TOP -> setPadding(paddingL, paddingT, paddingR, paddingB + arrowHeight)
-            Position.BOTTOM -> setPadding(paddingL, paddingT + arrowHeight, paddingR, paddingB)
-            Position.LEFT -> setPadding(paddingL, paddingT, paddingR + arrowHeight, paddingB)
-            Position.RIGHT -> setPadding(paddingL + arrowHeight, paddingT, paddingR, paddingB)
+            Position.TOP -> setPadding(paddingS, paddingT, paddingE, paddingB + arrowHeight)
+            Position.BOTTOM -> setPadding(paddingS, paddingT + arrowHeight, paddingE, paddingB)
+            Position.LEFT -> setPadding(paddingS, paddingT, paddingE + arrowHeight, paddingB)
+            Position.RIGHT -> setPadding(paddingS + arrowHeight, paddingT, paddingE, paddingB)
         }
 
         postInvalidate()
     }
 
-    private fun drawBubble(rect: Rect, shadowRect: RectF, topLeftDiameter: Float, topRightDiameter: Float, bottomRightDiameter: Float, bottomLeftDiameter: Float): Path {
+    private fun drawBubble(
+        rect: Rect,
+        shadowRect: RectF,
+        topLeftDiameter: Float,
+        topRightDiameter: Float,
+        bottomRightDiameter: Float,
+        bottomLeftDiameter: Float
+    ): Path {
         val path = Path()
 
         val topLeftD = if (topLeftDiameter < 0) 0f else topLeftDiameter

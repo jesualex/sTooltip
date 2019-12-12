@@ -2,7 +2,7 @@ package cl.jesualex.tooltip.main.activity
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import cl.jesualex.stooltip.Position
 import cl.jesualex.stooltip.Tooltip
 import cl.jesualex.tooltip.R
@@ -20,11 +20,12 @@ class MainActivity : AppCompatActivity() {
         showTooltipButton.setOnClickListener {
             Tooltip.on(exampleTextView)
                 .text(R.string.example)
-                .icon(android.R.drawable.ic_dialog_info)
-                .iconSize(30, 30)
+                .iconStart(android.R.drawable.ic_dialog_info)
+                .iconStartSize(30, 30)
                 .color(resources.getColor(R.color.colorPrimary))
                 .overlay(resources.getColor(R.color.overlay))
-                .drawableRight(R.drawable.ic_android_black_24dp)
+                .iconEnd(android.R.drawable.ic_dialog_info)
+                .iconEndSize(30, 30)
                 .border(Color.BLACK, 1f)
                 .clickToHide(true)
                 .corner(5)

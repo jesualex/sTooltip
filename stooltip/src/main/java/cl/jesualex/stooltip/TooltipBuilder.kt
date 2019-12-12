@@ -4,14 +4,14 @@ import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.support.annotation.AnimRes
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.AnimRes
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 
 /**
  * Created by jesualex on 2019-04-29.
@@ -22,103 +22,89 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return tooltip.show(duration)
     }
 
-    fun drawableLeft(@DrawableRes left: Int): TooltipBuilder {
-        tooltip
-            .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(left, 0, 0, 0)
-        return this
-    }
-
-    fun drawableRight(@DrawableRes right: Int): TooltipBuilder {
-        tooltip
-            .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(0, 0, right, 0)
-        return this
-    }
-
     fun drawableTop(@DrawableRes top: Int): TooltipBuilder {
         tooltip
             .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(0, top, 0, 0)
+            .setCompoundDrawablesWithIntrinsicBounds(0, top, 0, 0)
         return this
     }
 
     fun drawableBottom(@DrawableRes bottom: Int): TooltipBuilder {
         tooltip
             .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, bottom)
+            .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, bottom)
         return this
     }
 
     fun text(text: String): TooltipBuilder {
-        tooltip.getTextView()?.text = text
+        tooltip.getTextView().text = text
 
         return this
     }
 
     fun text(text: Spanned): TooltipBuilder {
-        tooltip.getTextView()?.text = text
+        tooltip.getTextView().text = text
 
         return this
     }
 
     fun text(@StringRes text: Int): TooltipBuilder {
-        tooltip.getTextView()?.setText(text)
+        tooltip.getTextView().setText(text)
 
         return this
     }
 
     fun textColor(@ColorInt textColor: Int): TooltipBuilder {
-        tooltip.getTextView()?.setTextColor(textColor)
+        tooltip.getTextView().setTextColor(textColor)
         return this
     }
 
     fun textTypeFace(typeface: Typeface): TooltipBuilder {
-        tooltip.getTextView()?.typeface = typeface
+        tooltip.getTextView().typeface = typeface
         return this
     }
 
     fun textSize(unit: Int, textSize: Float): TooltipBuilder {
-        tooltip.getTextView()?.setTextSize(unit, textSize)
+        tooltip.getTextView().setTextSize(unit, textSize)
         return this
     }
 
     fun textSize(textSize: Float): TooltipBuilder {
-        tooltip.getTextView()?.textSize = textSize
+        tooltip.getTextView().textSize = textSize
         return this
     }
 
     fun textGravity(textGravity: Int): TooltipBuilder {
-        tooltip.getTextView()?.gravity = textGravity
+        tooltip.getTextView().gravity = textGravity
         return this
     }
 
-    fun icon(@DrawableRes iconRes: Int): TooltipBuilder {
-        tooltip.getImageView()?.let {
+    fun iconStart(@DrawableRes iconRes: Int): TooltipBuilder {
+        tooltip.getStartImageView().let {
             it.setImageResource(iconRes)
             it.visibility = View.VISIBLE
         }
         return this
     }
 
-    fun icon(icon: Drawable): TooltipBuilder {
-        tooltip.getImageView()?.let {
+    fun iconStart(icon: Drawable): TooltipBuilder {
+        tooltip.getStartImageView().let {
             it.setImageDrawable(icon)
             it.visibility = View.VISIBLE
         }
         return this
     }
 
-    fun icon(icon: Bitmap): TooltipBuilder {
-        tooltip.getImageView()?.let {
+    fun iconStart(icon: Bitmap): TooltipBuilder {
+        tooltip.getStartImageView().let {
             it.setImageBitmap(icon)
             it.visibility = View.VISIBLE
         }
         return this
     }
 
-    fun iconMargin(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
-        tooltip.getImageView()?.let {
+    fun iconStartMargin(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
+        tooltip.getStartImageView().let {
             val lp = it.layoutParams
 
             if(lp is FrameLayout.LayoutParams){
@@ -130,8 +116,56 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
-    fun iconSize(h: Int, w: Int): TooltipBuilder {
-        tooltip.getImageView()?.let {
+    fun iconStartSize(h: Int, w: Int): TooltipBuilder {
+        tooltip.getStartImageView().let {
+            val lp = it.layoutParams
+            lp.height = h
+            lp.width = w
+            it.layoutParams = lp
+        }
+
+        return this
+    }
+
+    fun iconEnd(@DrawableRes iconRes: Int): TooltipBuilder {
+        tooltip.getEndImageView().let {
+            it.setImageResource(iconRes)
+            it.visibility = View.VISIBLE
+        }
+        return this
+    }
+
+    fun iconEnd(icon: Drawable): TooltipBuilder {
+        tooltip.getEndImageView().let {
+            it.setImageDrawable(icon)
+            it.visibility = View.VISIBLE
+        }
+        return this
+    }
+
+    fun iconEnd(icon: Bitmap): TooltipBuilder {
+        tooltip.getEndImageView().let {
+            it.setImageBitmap(icon)
+            it.visibility = View.VISIBLE
+        }
+        return this
+    }
+
+    fun iconEndMargin(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
+        tooltip.getEndImageView().let {
+            val lp = it.layoutParams
+
+            if(lp is FrameLayout.LayoutParams){
+                lp.setMargins(left, top, right, bottom)
+                it.layoutParams = lp
+            }
+        }
+
+        return this
+    }
+
+    fun iconEndSize(h: Int, w: Int): TooltipBuilder {
+        tooltip.getEndImageView().let {
             val lp = it.layoutParams
             lp.height = h
             lp.width = w
@@ -149,8 +183,8 @@ class TooltipBuilder(private val tooltip: Tooltip){
     fun padding(top: Int, right: Int, bottom: Int, left: Int): TooltipBuilder {
         tooltip.tooltipView.paddingT = top
         tooltip.tooltipView.paddingB = bottom
-        tooltip.tooltipView.paddingL = left
-        tooltip.tooltipView.paddingR = right
+        tooltip.tooltipView.paddingS = left
+        tooltip.tooltipView.paddingE = right
 
         return this
     }
@@ -219,7 +253,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
         return this
     }
 
-    @JvmOverloads fun animation(@AnimRes animIn: Int,@AnimRes animOut: Int = animIn): TooltipBuilder {
+    @JvmOverloads fun animation(@AnimRes animIn: Int, @AnimRes animOut: Int = animIn): TooltipBuilder {
         tooltip.animIn = animIn
         tooltip.animOut = animOut
         return this
