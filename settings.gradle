@@ -1,1 +1,1 @@
-include ':stooltip'
+include ':app', ':stooltip'
