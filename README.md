@@ -70,118 +70,123 @@ or if you wish you can add a root view and the tooltip will be ubicate inside of
 
 Once the builder has been initialized, you can configure your tooltip, below you can briefly see the different methods you can use for that config
 
-* To set text
+* To set text  
 `builder.text(text)`
 
-* To set text color
+* To set text color  
 `builder.textColor(colorInt)`
 
-* To set text typeface
+* To set text typeface  
 `builder.textTypeFace(typeface)`
 
-* To set text size
-`builder.textSize(textSize)`
-`builder.textSize(unit, textSize)`
+* To set text size  
+`builder.textSize(textSize)`  
+`builder.textSize(unit, textSize)`  
 
-* To set text gravity
-`builder.textGravity(TextViewGravity)`
+* To set text gravity  
+`builder.textGravity(TextViewGravity)`  
 
-* To enable a start icon(by default disabled)
-`builder.iconStart(icon)`
+* To enable a start icon(by default disabled)  
+`builder.iconStart(icon)`  
 
-* To set the start icon margin in px
-`builder.iconStartMargin(left, top, right, bottom)`
+* To set the start icon margin in px  
+`builder.iconStartMargin(left, top, right, bottom)`  
 
-* To set the start icon size in px
-`builder.iconStartSize(h, w)`
+* To set the start icon size in px  
+`builder.iconStartSize(h, w)`  
 
-* To enable a end icon(by default disabled)
-`builder.iconEnd(icon)`
+* To enable a end icon(by default disabled)  
+`builder.iconEnd(icon)`  
 
-* To set the end icon margin in px
-`builder.iconEndMargin(left, top, right, bottom)`
+* To set the end icon margin in px  
+`builder.iconEndMargin(left, top, right, bottom)`  
 
-* To set the end icon size in px
-`builder.iconEndSize(h, w)`
+* To set the end icon size in px  
+`builder.iconEndSize(h, w)`  
 
-* To set a top drawable
-`builder.drawableTop(drawable)`
+* To set a top drawable  
+`builder.drawableTop(drawable)`  
 
-* To set a bottom drawable
-`builder.drawableBottom(drawable)`
+* To set a bottom drawable  
+`builder.drawableBottom(drawable)`  
 
-* To set the tooltip bubble color
-`builder.color(color)`
+* To set the tooltip bubble color  
+`builder.color(color)`  
 
-* To set the tooltip content padding in px
-`builder.padding(top, right, bottom, left)`
+* To set the tooltip content padding in px  
+`builder.padding(top, right, bottom, left)`  
 
-* To set the position of the tooltip in relation to the view to which it points(by deafult Bottom)
-`builder.position(position)`
+* To set the position of the tooltip in relation to the view to which it points(by deafult Bottom)  
+`builder.position(position)`  
 
-* To set the corner radius in px of the tooltip bubble
-`builder.corner(radius)`
+* To set the corner radius in px of the tooltip bubble  
+`builder.corner(radius)`  
 
-* To enable autohide on tap(by default is enabled)
-`builder.clickToHide(bool)`
+* To enable autohide on tap(by default is enabled)  
+`builder.clickToHide(bool)`  
 
-* To set the distance in px between the tooltip and the view to which it points
-`builder.distanceWithView(distance)`
+* To set the distance in px between the tooltip and the view to which it points  
+`builder.distanceWithView(distance)`  
 
-* To set the the border color and width in px
-`builder.border(color, width)`
+* To set the the border color and width in px  
+`builder.border(color, width)`  
 
-* To set the the border margin in px
-`builder.border(margin)`
+* To set the the border margin in px  
+`builder.border(margin)`  
 
-* To enable and set a bubble shadow(by default bubble shadow radius is 0, it means shadow disabled)
-`builder.shadow(radius)`
-`builder.shadow(radius, color)`
+* To enable and set a bubble shadow(by default bubble shadow radius is 0, it means shadow disabled)  
+`builder.shadow(radius)`  
+`builder.shadow(radius, color)`  
 
-* To set shadow padding
-`builder.shadow(padding)`
+* To set shadow padding  
+`builder.shadow(padding)`  
 
-* To set the arrow size
-`builder.arrowSize(h, w)`
+* To set the arrow size  
+`builder.arrowSize(h, w)`  
 
-* To set a tooltip minWidth in px if the space in parent isn't enough the tooltip will be relocated to the opposite position
-`builder.minWidth(w)`
+* To set a tooltip minWidth in px if the space in parent isn't enough the tooltip will be relocated to the opposite position  
+`builder.minWidth(w)`  
 
-* To set a tooltip minHeight in px if the space in parent isn't enough the tooltip will be relocated to the opposite position
-`builder.minHeight(w)`
+* To set a tooltip minHeight in px if the space in parent isn't enough the tooltip will be relocated to the opposite position  
+`builder.minHeight(w)`  
 
-* To set a tooltip show/hide animation
-`builder.animation(anim)`
-`builder.animation(animIn, animOut)`
+* To set a tooltip show/hide animation  
+`builder.animation(anim)`  
+`builder.animation(animIn, animOut)`  
 
-* To set a lifecycle listener to know when the tooltip has showed or hidden
-`builder.displayListener(listener)`
+* To set a lifecycle listener to know when the tooltip has showed or hidden  
+`builder.displayListener(listener)`  
 
-* To set a click listener to catch when the user click the tooltip
-`builder.tooltipClickListener(listener)`
+* To set a click listener to catch when the user click the tooltip  
+`builder.tooltipClickListener(listener)`  
 
-* To set a click listener to catch when the user click the view to which the tooltip points
-`builder.refViewClickListener(listener)`
+* To set a click listener to catch when the user click the view to which the tooltip points  
+`builder.refViewClickListener(listener)`  
 
-* To enable overlay function and set a listener to catch when the user click the overlay(by default the overlay click has disabled, it means that if the user clicks in the overlay, that click will be send to the view under the overlay)
-`builder.overlay(color)`
-`builder.overlay(color, listener)`
+* To enable overlay function and set a listener to catch when the user click the overlay(by default the overlay click has disabled, it means that if the user clicks in the overlay, that click will be send to the view under the overlay)  
+`builder.overlay(color)`  
+`builder.overlay(color, listener)`  
 
 #### Show options
 After configure your tooltip just left show it, if you want set a duration in millis and the tooltip will be autohide after that time(by default autohide is disabled)
 
-`builder.show()`
-`builder.show(duration)`
+`builder.show()`  
+`builder.show(duration)`    
 
-This show method return a Tooltip instance, with which you can close, closeNow(without animation) and show it again
+This show method return a Tooltip instance, with which you can close, and show it again. If you call show before close, the tooltip will make a closeNow() and it will be shown again.
 
-`tooltip.close()`
-`tooltip.closeNow()`
-`tooltip.show()`
-`tooltip.show(duration)`
-`tooltip.show(text)`
-`tooltip.show(duration, text)`
-`tooltip.isShown(): Boolean`
+* To close the tooltip with animation  
+`tooltip.close()`  
+* To close the tooltip without animation  
+`tooltip.closeNow()`  
+
+`tooltip.show()`  
+`tooltip.show(duration)`  
+`tooltip.show(text)`  
+`tooltip.show(duration, text)` 
+
+* To know if tooltip if currently shown  
+`tooltip.isShown(): Boolean` 
 
 ## Example
 
