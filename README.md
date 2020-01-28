@@ -50,7 +50,7 @@ apply plugin: 'kotlin-android-extensions'
 ...
 dependencies {
     ...
-    implementation 'cl.jesualex.android:stooltip:1.0'
+    implementation 'cl.jesualex.android:stooltip:$last_version'
 }
 ```
 
