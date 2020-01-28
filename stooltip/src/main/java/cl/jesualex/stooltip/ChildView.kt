@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -56,6 +58,10 @@ class ChildView : LinearLayout {
     }
 
     fun attach(){
+        removeParent(iconStart)
+        removeParent(iconEnd)
+        removeParent(textView)
+
         if(iconStart.drawable != null){
             val iconLP = iconStart.layoutParams as LayoutParams
 
@@ -84,6 +90,14 @@ class ChildView : LinearLayout {
 
             iconLP.gravity = Gravity.CENTER
             addView(iconEnd, iconLP)
+        }
+    }
+
+    private fun removeParent(view: View){
+        view.parent?.let {
+            if(it is ViewGroup){
+                it.removeView(view)
+            }
         }
     }
 }

@@ -186,6 +186,8 @@ class Tooltip private constructor(private val activity: Activity, private val re
         }
     }
 
+    fun isShown() = overlay.parent != null
+
     internal fun initTargetClone() {
         val targetGhostView = TargetView(activity)
         targetGhostView.setTarget(refView)

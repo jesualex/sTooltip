@@ -3,6 +3,8 @@ sTooltip is a simple Tooltip flexible and self-adjusting kotlin Library for Andr
 
 [ ![Download](https://api.bintray.com/packages/jesualex/sTooltip/cl.jesualex.stooltip/images/download.svg) ](https://bintray.com/jesualex/sTooltip/cl.jesualex.stooltip/_latestVersion)
 
+<img src="ss/tooltip1.jpg" width="420px" height="auto" /><img src="ss/tooltip2.jpg" width="420px" height="auto" />
+
 ## Easy Use:
 
 ``` kotlin
@@ -58,11 +60,11 @@ dependencies {
 
 For your convenience, you can initialize the constructor only using the view to which you want the tooltip to refer, in that case the tooltip will be attached to the decorView(OVER ALL VIEWS)
 
-`Tooltip.on(View)`  
+`Tooltip.on(View)`
 
 or if you wish you can add a root view and the tooltip will be ubicate inside of this view
 
-`Tooltip.on(View, View)`  
+`Tooltip.on(View, View)`
 
 #### Builder options
 
@@ -166,23 +168,28 @@ Once the builder has been initialized, you can configure your tooltip, below you
 `builder.overlay(color, listener)`
 
 #### Show options
-After configure your tooltip just left show it, if you want set a duration in millis and the tooltip will be autohide after that time(by default autohide is disabled)  
+After configure your tooltip just left show it, if you want set a duration in millis and the tooltip will be autohide after that time(by default autohide is disabled)
 
-`builder.show()`  
-`builder.show(duration)`  
+`builder.show()`
+`builder.show(duration)`
 
 This show method return a Tooltip instance, with which you can close, closeNow(without animation) and show it again
 
-`tooltip.close()`  
-`tooltip.closeNow()`  
-`tooltip.show()`  
-`tooltip.show(duration)`  
-`tooltip.show(text)`  
-`tooltip.show(duration, text)`  
+`tooltip.close()`
+`tooltip.closeNow()`
+`tooltip.show()`
+`tooltip.show(duration)`
+`tooltip.show(text)`
+`tooltip.show(duration, text)`
+`tooltip.isShown(): Boolean`
 
 ## Example
 
 To get a small example, please [download this repo](/) and execute it
+
+## Thanks to:
+
+- [makks129](https://github.com/makks129) for tooltip screenshots
 
 License
 -------
