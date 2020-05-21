@@ -126,10 +126,10 @@ class TooltipBuilder(private val tooltip: Tooltip){
 
         return this
     }
-    fun lineHeight(lineHeightAdd:Float, lineHeightMultiplier:Float): TooltipBuilder {
+    fun lineHeight(lineSpacingExtra:Float, lineSpacingMultiplier:Float): TooltipBuilder {
         tooltip.let {
-            it.lineHeightAdd = lineHeightAdd
-            it.lineHeightMultiplier = lineHeightMultiplier
+            it.lineSpacingExtra = lineSpacingExtra
+            it.lineSpacingMultiplier = lineSpacingMultiplier
         }
         return this
     }
