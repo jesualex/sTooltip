@@ -27,6 +27,8 @@ class Tooltip private constructor(private val activity: Activity, private val re
     internal var refViewClickListener: TooltipClickListener? = null
     internal var animIn = 0
     internal var animOut = 0
+    internal var lineSpacingMultiplier = getTextView().lineSpacingMultiplier
+    internal var lineSpacingExtra = getTextView().lineSpacingExtra
 
     init {
         if(rootView?.let{return@let findScrollParent(it)} == null){
@@ -86,7 +88,7 @@ class Tooltip private constructor(private val activity: Activity, private val re
 
             tooltipView.childView.attach()
             text?.let { getTextView().text = it }
-
+            getTextView().setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
             val decorView = if (rootView != null)
                 rootView as ViewGroup
             else

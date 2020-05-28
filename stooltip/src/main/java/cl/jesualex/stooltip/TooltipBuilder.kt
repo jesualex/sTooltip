@@ -126,6 +126,13 @@ class TooltipBuilder(private val tooltip: Tooltip){
 
         return this
     }
+    fun lineHeight(lineSpacingExtra:Float, lineSpacingMultiplier:Float): TooltipBuilder {
+        tooltip.let {
+            it.lineSpacingExtra = lineSpacingExtra
+            it.lineSpacingMultiplier = lineSpacingMultiplier
+        }
+        return this
+    }
 
     fun iconEnd(@DrawableRes iconRes: Int): TooltipBuilder {
         tooltip.getEndImageView().let {
