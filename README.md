@@ -60,10 +60,10 @@ dependencies {
 For your convenience, you can initialize the constructor only using the view to which you want the
 tooltip to refer, in that case the tooltip will be attached to the decorView(OVER ALL VIEWS), you
 can also optionally define with a bool if you want to close the tooltip as soon as the referenced
-view has been detached, by default it comes true.
+view has been detached, by default it comes true.  
 
-`Tooltip.on(View)`
-`Tooltip.on(View, Bool)`
+`Tooltip.on(View)`  
+`Tooltip.on(View, Bool)`  
 
 #### Builder options
 
@@ -184,7 +184,7 @@ This show method return a Tooltip instance, with which you can close, and show i
 * To close the tooltip without animation  
 `tooltip.closeNow()`
 
-* To show the tooltip again
+* To show the tooltip again  
 `tooltip.show()`  
 `tooltip.show(duration)`  
 `tooltip.show(text)`  
