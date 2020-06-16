@@ -13,12 +13,15 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.widget.NestedScrollView
 
 /**
  * Created by jesualex on 2019-04-25.
  */
-class Tooltip private constructor(private val activity: Activity, private val refView: View, private val rootView: View?){
+class Tooltip private constructor(
+    private val activity: Activity,
+    private val refView: View,
+    closeOnParentDetach: Boolean
+){
     internal val tooltipView: TooltipView = TooltipView(activity)
     internal val overlay: FrameLayout = FrameLayout(activity)
     internal var clickToHide: Boolean = true
@@ -27,21 +30,8 @@ class Tooltip private constructor(private val activity: Activity, private val re
     internal var refViewClickListener: TooltipClickListener? = null
     internal var animIn = 0
     internal var animOut = 0
-    internal var lineSpacingMultiplier = getTextView().lineSpacingMultiplier
-    internal var lineSpacingExtra = getTextView().lineSpacingExtra
 
     init {
-        if(rootView?.let{return@let findScrollParent(it)} == null){
-            findScrollParent(refView)?.let { scrollParent ->
-                scrollParent.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener {
-                    _, scrollX, scrollY, oldScrollX, oldScrollY ->
-
-                    tooltipView.translationY -= (scrollY - oldScrollY)
-                    tooltipView.translationX -= (scrollX - oldScrollX)
-                })
-            }
-        }
-
         tooltipView.setOnClickListener {
             tooltipClickListener?.onClick(tooltipView, this)
 
@@ -50,23 +40,15 @@ class Tooltip private constructor(private val activity: Activity, private val re
             }
         }
 
-        refView.addOnAttachStateChangeListener( object : View.OnAttachStateChangeListener {
-            override fun onViewDetachedFromWindow(v: View?) {
-                closeNow()
-                v?.removeOnAttachStateChangeListener(this)
-            }
+        if(closeOnParentDetach) {
+            refView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewDetachedFromWindow(v: View?) {
+                    closeNow()
+                    v?.removeOnAttachStateChangeListener(this)
+                }
 
-            override fun onViewAttachedToWindow(v: View?) {}
-        })
-    }
-
-    private fun findScrollParent(view: View): NestedScrollView? {
-        val parent = view.parent
-
-        return parent as? NestedScrollView ?: if (parent is View) {
-            findScrollParent(parent as View)
-        } else {
-            null
+                override fun onViewAttachedToWindow(v: View?) {}
+            })
         }
     }
 
@@ -75,11 +57,11 @@ class Tooltip private constructor(private val activity: Activity, private val re
     }
 
     internal fun getStartImageView(): ImageView{
-        return tooltipView.childView.getStartImageView();
+        return tooltipView.childView.getStartImageView()
     }
 
     internal fun getEndImageView(): ImageView{
-        return tooltipView.childView.getEndImageView();
+        return tooltipView.childView.getEndImageView()
     }
 
     @JvmOverloads fun show(duration: Long = 0, text: String? = null): Tooltip{
@@ -88,25 +70,20 @@ class Tooltip private constructor(private val activity: Activity, private val re
 
             tooltipView.childView.attach()
             text?.let { getTextView().text = it }
-            getTextView().setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
-            val decorView = if (rootView != null)
-                rootView as ViewGroup
-            else
-                activity.window.decorView as ViewGroup
 
+            val tooltipParent = activity.window.decorView as ViewGroup
             val rect = Rect()
-            val decorRect = Rect()
-            refView.getGlobalVisibleRect(rect)
-            decorView.getGlobalVisibleRect(decorRect)
 
-            tooltipView.setup(rect, decorRect)
+            refView.getGlobalVisibleRect(rect)
+
+            tooltipView.setup(rect, tooltipParent)
 
             val lP = ViewGroup.LayoutParams(
-                    decorView.width,
-                    decorView.height
+                    tooltipParent.width,
+                    tooltipParent.height
             )
 
-            decorView.addView(overlay, lP)
+            tooltipParent.addView(overlay, lP)
 
             if(animIn == 0){
                 displayListener?.onDisplay(tooltipView, true)
@@ -180,12 +157,14 @@ class Tooltip private constructor(private val activity: Activity, private val re
     }
 
     fun closeNow(){
-        val parent = overlay.parent
+            val parent = overlay.parent
 
-        if (parent != null && parent is ViewGroup) {
-            parent.removeView(overlay)
-            displayListener?.onDisplay(tooltipView, false)
-        }
+            if (parent != null && parent is ViewGroup) {
+                overlay.post {
+                    parent.removeView(overlay)
+                    displayListener?.onDisplay(tooltipView, false)
+                }
+            }
     }
 
     fun isShown() = overlay.parent != null
@@ -201,10 +180,18 @@ class Tooltip private constructor(private val activity: Activity, private val re
         overlay.setOnClickListener { overlayClickListener.onClick(it, this) }
     }
 
+    fun moveTooltip(x: Int, y:Int){
+        overlay.translationY -= y
+        overlay.translationX -= x
+    }
+
     companion object{
-        @JvmStatic @JvmOverloads fun on(refView: View, rootView: View? = null): TooltipBuilder {
+        @JvmStatic @JvmOverloads fun on(
+            refView: View,
+            closeOnParentDetach: Boolean = true
+        ): TooltipBuilder {
             getActivity(refView.context)!!.let {
-                return TooltipBuilder(Tooltip(it, refView, rootView))
+                return TooltipBuilder(Tooltip(it, refView, closeOnParentDetach))
             }
         }
 

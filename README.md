@@ -13,7 +13,6 @@ sTooltip is a simple Tooltip flexible and self-adjusting kotlin Library for Andr
                 .icon(android.R.drawable.ic_dialog_info)
                 .iconSize(30, 30)
                 .color(resources.getColor(R.color.colorPrimary))
-                .overlay(resources.getColor(R.color.overlay))
                 .border(Color.BLACK, 1f)
                 .clickToHide(true)
                 .corner(5)
@@ -58,17 +57,18 @@ dependencies {
 
 #### Initialization of Builder
 
-For your convenience, you can initialize the constructor only using the view to which you want the tooltip to refer, in that case the tooltip will be attached to the decorView(OVER ALL VIEWS)
+For your convenience, you can initialize the constructor only using the view to which you want the
+tooltip to refer, in that case the tooltip will be attached to the decorView(OVER ALL VIEWS), you
+can also optionally define with a bool if you want to close the tooltip as soon as the referenced
+view has been detached, by default it comes true.
 
 `Tooltip.on(View)`
-
-or if you wish you can add a root view and the tooltip will be ubicate inside of this view
-
-`Tooltip.on(View, View)`
+`Tooltip.on(View, Bool)`
 
 #### Builder options
 
-Once the builder has been initialized, you can configure your tooltip, below you can briefly see the different methods you can use for that config
+Once the builder has been initialized, you can configure your tooltip, below you can briefly
+see the different methods you can use for that config
 
 * To set text  
 `builder.text(text)`
@@ -84,7 +84,10 @@ Once the builder has been initialized, you can configure your tooltip, below you
 `builder.textSize(unit, textSize)`  
 
 * To set text gravity  
-`builder.textGravity(TextViewGravity)`  
+`builder.textGravity(TextViewGravity)`
+
+* To set text lineHeight
+`builder.lineHeight(lineSpacingExtra, lineSpacingMultiplier)`
 
 * To enable a start icon(by default disabled)  
 `builder.iconStart(icon)`  
@@ -176,10 +179,12 @@ After configure your tooltip just left show it, if you want set a duration in mi
 This show method return a Tooltip instance, with which you can close, and show it again. If you call show before close, the tooltip will make a closeNow() and it will be shown again.
 
 * To close the tooltip with animation  
-`tooltip.close()`  
-* To close the tooltip without animation  
-`tooltip.closeNow()`  
+`tooltip.close()`
 
+* To close the tooltip without animation  
+`tooltip.closeNow()`
+
+* To show the tooltip again
 `tooltip.show()`  
 `tooltip.show(duration)`  
 `tooltip.show(text)`  

@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Rect
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 
 /**
@@ -14,28 +16,31 @@ class TargetView(context: Context): AppCompatImageView(context) {
     private val position = IntArray(4)
     private val size = IntArray(2)
 
-    private fun setLayoutLikeAsView(target: View) {
-        target.getLocationOnScreen(position)
-        position[2] = position[0] + target.width
-        position[3] = position[1] + target.height
-    }
-
     override fun layout(l: Int, t: Int, r: Int, b: Int) {
         super.layout(position[0], position[1], position[2], position[3])
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(size[0], size[1])
+        super.onMeasure(
+            MeasureSpec.makeMeasureSpec(size[0], MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(size[1], MeasureSpec.EXACTLY)
+        )
     }
 
     fun setTarget(target: View?) {
         if (target == null) return
-        setLayoutLikeAsView(target)
+
+        val innerPos = IntArray(2)
+
+        target.getLocationOnScreen(innerPos)
+        position[0] = innerPos[0]
+        position[1] = innerPos[1]
+        position[2] = innerPos[0] + target.width
+        position[3] = innerPos[1] + target.height
+
         val bitmap = getBitmapFromView(target) ?: return
 
         setImageBitmap(bitmap)
-        size[0] = bitmap.width
-        size[1] = bitmap.height
     }
 
     private fun getBitmapFromView(view: View): Bitmap? {

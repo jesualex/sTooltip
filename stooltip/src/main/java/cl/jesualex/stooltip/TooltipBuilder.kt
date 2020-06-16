@@ -33,6 +33,7 @@ class TooltipBuilder(private val tooltip: Tooltip){
         tooltip
             .getTextView()
             .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, bottom)
+
         return this
     }
 
@@ -80,37 +81,39 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun iconStart(@DrawableRes iconRes: Int): TooltipBuilder {
-        tooltip.getStartImageView().let {
-            it.setImageResource(iconRes)
-            it.visibility = View.VISIBLE
-        }
+        val iv = tooltip.getStartImageView()
+
+        iv.setImageResource(iconRes)
+        iv.visibility = View.VISIBLE
+
         return this
     }
 
     fun iconStart(icon: Drawable): TooltipBuilder {
-        tooltip.getStartImageView().let {
-            it.setImageDrawable(icon)
-            it.visibility = View.VISIBLE
-        }
+        val iv = tooltip.getStartImageView()
+
+        iv.setImageDrawable(icon)
+        iv.visibility = View.VISIBLE
+
         return this
     }
 
     fun iconStart(icon: Bitmap): TooltipBuilder {
-        tooltip.getStartImageView().let {
-            it.setImageBitmap(icon)
-            it.visibility = View.VISIBLE
-        }
+        val iv = tooltip.getStartImageView()
+
+        iv.setImageBitmap(icon)
+        iv.visibility = View.VISIBLE
+
         return this
     }
 
     fun iconStartMargin(left: Int, top: Int, right: Int, bottom: Int): TooltipBuilder {
-        tooltip.getStartImageView().let {
-            val lp = it.layoutParams
+        val iv = tooltip.getStartImageView()
+        val lp = iv.layoutParams
 
-            if(lp is FrameLayout.LayoutParams){
-                lp.setMargins(left, top, right, bottom)
-                it.layoutParams = lp
-            }
+        if(lp is FrameLayout.LayoutParams){
+            lp.setMargins(left, top, right, bottom)
+            iv.layoutParams = lp
         }
 
         return this
@@ -126,19 +129,19 @@ class TooltipBuilder(private val tooltip: Tooltip){
 
         return this
     }
+
     fun lineHeight(lineSpacingExtra:Float, lineSpacingMultiplier:Float): TooltipBuilder {
-        tooltip.let {
-            it.lineSpacingExtra = lineSpacingExtra
-            it.lineSpacingMultiplier = lineSpacingMultiplier
-        }
+        tooltip.getTextView().setLineSpacing(lineSpacingExtra, lineSpacingMultiplier)
+
         return this
     }
 
     fun iconEnd(@DrawableRes iconRes: Int): TooltipBuilder {
-        tooltip.getEndImageView().let {
-            it.setImageResource(iconRes)
-            it.visibility = View.VISIBLE
-        }
+        val iv = tooltip.getEndImageView()
+
+        iv.setImageResource(iconRes)
+        iv.visibility = View.VISIBLE
+
         return this
     }
 
@@ -217,11 +220,9 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun border(color: Int, width: Float): TooltipBuilder {
-        val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val borderPaint = tooltip.tooltipView.borderPaint
         borderPaint.color = color
-        borderPaint.style = Paint.Style.STROKE
         borderPaint.strokeWidth = width
-        tooltip.tooltipView.borderPaint = borderPaint
         return this
     }
 
@@ -277,8 +278,8 @@ class TooltipBuilder(private val tooltip: Tooltip){
     }
 
     fun arrowSize(h: Int, w: Int): TooltipBuilder {
-        tooltip.tooltipView.arrowHeight = h
-        tooltip.tooltipView.arrowWidth = w
+        tooltip.tooltipView.arrowHeight = h.toFloat()
+        tooltip.tooltipView.arrowWidth = w.toFloat()
 
         return this
     }

@@ -5,8 +5,8 @@ package cl.jesualex.stooltip
  */
 
 enum class Position{
-    LEFT,
-    RIGHT,
+    START,
+    END,
     TOP,
     BOTTOM
 }
