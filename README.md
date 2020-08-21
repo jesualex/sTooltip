@@ -1,9 +1,11 @@
 # sTooltip
 sTooltip is a simple Tooltip flexible and self-adjusting kotlin Library for Android.
 
-[ ![Download](https://api.bintray.com/packages/jesualex/sTooltip/cl.jesualex.stooltip/images/download.svg) ](https://bintray.com/jesualex/sTooltip/cl.jesualex.stooltip/_latestVersion)
+[![Jitpack](https://jitpack.io/v/luisvasquez/sTooltip.svg)](https://jitpack.io/#luisvasquez/sTooltip)
 
-<img src="ss/tooltip1.jpg" width="420px" height="auto" /><img src="ss/tooltip2.jpg" width="420px" height="auto" />
+## Examples:
+<img src="ss/tooltip1.jpg" width="320px" height="auto" />
+<img src="ss/tooltip2.jpg" width="320px" height="auto" />
 
 ## Easy Use:
 
@@ -20,37 +22,21 @@ sTooltip is a simple Tooltip flexible and self-adjusting kotlin Library for Andr
                 .show(3000)
 ```
 
-## First Steps
-
-In your Project build.gradle you must have the following
-
-``` gradle
-buildscript {
-    ...
-    repositories {
-        ...
-        jcenter()
-    }
-    ...
-    dependencies {
-        ...
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-    ...
-}
+## Step 1. Add it in your root build.gradle at the end of repositories:
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
 
-In your App build.gradle you must have the following
-
-``` gradle
-...
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-...
-dependencies {
-    ...
-    implementation 'cl.jesualex.android:stooltip:$last_version'
-}
+## Step 2. Add the dependency
+```
+	dependencies {
+	        implementation 'com.github.luisvasquez:sTooltip:Tag'
+	}
 ```
 
 ## Options
