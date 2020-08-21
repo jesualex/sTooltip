@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
 
+group = "cl.jesualex.stooltip"
 ext.versionName = "1.5"
 
 android {
