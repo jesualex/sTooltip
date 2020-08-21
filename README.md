@@ -200,6 +200,3 @@ To get a small example, please [download this repo](/) and execute it
 ## Thanks to:
 
 - [makks129](https://github.com/makks129) for tooltip screenshots
-
-
-2019 Jesualex.
