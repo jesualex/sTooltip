@@ -18,27 +18,26 @@ import androidx.annotation.StringRes
  */
 class TooltipBuilder(private val tooltip: Tooltip){
     @JvmOverloads fun show(duration: Long = 0): Tooltip{
-        tooltip.overlay!!.addView(tooltip.tooltipView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         return tooltip.show(duration)
     }
 
     fun drawableTop(@DrawableRes top: Int): TooltipBuilder {
         tooltip
             .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(0, top, 0, 0)
+            .setCompoundDrawablesWithIntrinsicBounds(0, top, 0, 0)
         return this
     }
 
     fun drawableBottom(@DrawableRes bottom: Int): TooltipBuilder {
         tooltip
             .getTextView()
-            ?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, bottom)
+            .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, bottom)
 
         return this
     }
 
     fun text(text: String): TooltipBuilder {
-        tooltip.getTextView()?.text = text
+        tooltip.getTextView().text = text
 
         return this
     }

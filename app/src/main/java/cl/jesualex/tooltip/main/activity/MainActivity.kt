@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         showTooltipButton.setOnClickListener {
             val text =  "a long string : xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxxxxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx"
-            on(exampleTextView, false)
+            on(exampleTextView)
                 .text(text)
                 .textGravity(Gravity.CENTER_HORIZONTAL)
                 .color(resources.getColor(R.color.colorPrimary))
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 //.corner(dp8)
                 //.arrowSize(dp8, (dp8 * 1.4f) as Int)
                 .position(Position.TOP)
-                .show()
+                .show(5000)
         }
 
         addFragmentButton.setOnClickListener {

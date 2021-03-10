@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Rect
-import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -12,7 +11,6 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.StringRes
 
 /**
  * Created by jesualex on 2019-04-25.
@@ -20,7 +18,7 @@ import androidx.annotation.StringRes
 class Tooltip private constructor(
     private var activity: Activity?,
     private var refView: View?,
-    closeOnParentDetach: Boolean
+    private val closeOnRefDetach: Boolean
 ){
     internal var tooltipView: TooltipView? = TooltipView(activity!!)
     internal var overlay: FrameLayout? = FrameLayout(activity!!)
@@ -31,6 +29,7 @@ class Tooltip private constructor(
     internal var animIn = 0
     internal var animOut = 0
     internal var targetGhostView: TargetView? = null
+    internal var refAttachListener: View.OnAttachStateChangeListener? = null
 
     init {
         tooltipView?.setOnClickListener {
@@ -40,39 +39,45 @@ class Tooltip private constructor(
                close()
             }
         }
+    }
 
-        if(false) {
-            refView?.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-                override fun onViewDetachedFromWindow(v: View?) {
-                    closeNow()
-                    refView?.removeOnAttachStateChangeListener(this)
+    internal fun getTextView(): TextView{
+        return tooltipView!!.childView!!.getTextView()
+    }
+
+    internal fun getStartImageView(): ImageView{
+        return tooltipView!!.childView!!.getStartImageView()
+    }
+
+    internal fun getEndImageView(): ImageView{
+        return tooltipView!!.childView!!.getEndImageView()
+    }
+
+    @JvmOverloads internal fun show(duration: Long = 0, text: String? = null): Tooltip {
+        overlay?.addView(
+            tooltipView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        refView?.post {
+            if(closeOnRefDetach && refAttachListener == null) {
+                refAttachListener = object : View.OnAttachStateChangeListener {
+                    override fun onViewDetachedFromWindow(v: View?) {
+                        closeNow()
+                        refView?.removeOnAttachStateChangeListener(this)
+                    }
+
+                    override fun onViewAttachedToWindow(v: View?) {}
                 }
 
-                override fun onViewAttachedToWindow(v: View?) {}
-            })
-        }
-    }
-
-    internal fun getTextView(): TextView?{
-        return tooltipView?.childView?.getTextView()
-    }
-
-    internal fun getStartImageView(): ImageView?{
-        return tooltipView?.childView?.getStartImageView()
-    }
-
-    internal fun getEndImageView(): ImageView?{
-        return tooltipView?.childView?.getEndImageView()
-    }
-
-    @JvmOverloads fun show(duration: Long = 0, text: String? = null): Tooltip{
-        refView?.post {
-            closeNow()
+                refView?.addOnAttachStateChangeListener(refAttachListener)
+            }
 
             tooltipView?.childView?.attach()
-            text?.let { getTextView()?.text = it }
+            text?.let { getTextView().text = it }
 
-            val tooltipParent = activity!!.window.decorView as ViewGroup
+            val tooltipParent = refView?.parent as ViewGroup
             val rect = Rect()
 
             refView?.getGlobalVisibleRect(rect)
@@ -112,34 +117,9 @@ class Tooltip private constructor(
         return this
     }
 
-    fun show(duration: Long, @StringRes text: Int): Tooltip{
-        getTextView()?.setText(text)
-        return show(duration)
-    }
-
-    fun show(duration: Long, text: Spanned): Tooltip{
-        getTextView()?.text = text
-        return show(duration)
-    }
-
-    fun show(@StringRes text: Int): Tooltip{
-        getTextView()?.setText(text)
-        return show()
-    }
-
-    fun show(text: Spanned): Tooltip{
-        getTextView()?.text = text
-        return show()
-    }
-
-    fun show(text: String): Tooltip{
-        getTextView()?.text = text
-        return show()
-    }
-
     fun close(){
         if(animOut == 0){
-            overlay?.post { closeNow() }
+            closeNow()
         }else{
             val animation = AnimationUtils.loadAnimation(tooltipView?.context, animOut)
 
@@ -158,26 +138,27 @@ class Tooltip private constructor(
     }
 
     fun closeNow(){
-        val parent = overlay?.parent
-
-        if (parent != null && parent is ViewGroup) {
-            overlay?.post {
-                parent.removeView(overlay)
-                displayListener?.onDisplay(tooltipView, false)
-            }
-
-            activity = null
-            refView = null
+        overlay?.post {
             targetGhostView?.setOnClickListener(null)
             (targetGhostView?.parent as? ViewGroup)?.removeView(targetGhostView)
             targetGhostView = null
 
-            (tooltipView?.parent as? ViewGroup)?.removeView(tooltipView)
-
+            tooltipView?.setOnClickListener(null)
             tooltipView?.clear()
-
             tooltipView = null
+
+            (overlay?.parent as? ViewGroup)?.removeView(overlay)
             overlay = null
+
+            displayListener?.onDisplay(tooltipView, false)
+
+            refAttachListener?.let {
+                refView?.removeOnAttachStateChangeListener(it)
+                refAttachListener = null
+            }
+
+            activity = null
+            refView = null
         }
     }
 
@@ -203,10 +184,10 @@ class Tooltip private constructor(
     companion object{
         @JvmStatic @JvmOverloads fun on(
             refView: View,
-            closeOnParentDetach: Boolean = true
+            closeOnRefViewDetach: Boolean = true
         ): TooltipBuilder {
             getActivity(refView.context)!!.let {
-                return TooltipBuilder(Tooltip(it, refView, closeOnParentDetach))
+                return TooltipBuilder(Tooltip(it, refView, closeOnRefViewDetach))
             }
         }
 
