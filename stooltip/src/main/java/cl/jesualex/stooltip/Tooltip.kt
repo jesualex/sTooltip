@@ -18,21 +18,22 @@ import androidx.annotation.StringRes
  * Created by jesualex on 2019-04-25.
  */
 class Tooltip private constructor(
-    private val activity: Activity,
-    private val refView: View,
+    private var activity: Activity?,
+    private var refView: View?,
     closeOnParentDetach: Boolean
 ){
-    internal val tooltipView: TooltipView = TooltipView(activity)
-    internal val overlay: FrameLayout = FrameLayout(activity)
+    internal var tooltipView: TooltipView? = TooltipView(activity!!)
+    internal var overlay: FrameLayout? = FrameLayout(activity!!)
     internal var clickToHide: Boolean = true
     internal var displayListener: DisplayListener? = null
     internal var tooltipClickListener: TooltipClickListener? = null
     internal var refViewClickListener: TooltipClickListener? = null
     internal var animIn = 0
     internal var animOut = 0
+    internal var targetGhostView: TargetView? = null
 
     init {
-        tooltipView.setOnClickListener {
+        tooltipView?.setOnClickListener {
             tooltipClickListener?.onClick(tooltipView, this)
 
             if (clickToHide) {
@@ -40,11 +41,11 @@ class Tooltip private constructor(
             }
         }
 
-        if(closeOnParentDetach) {
-            refView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        if(false) {
+            refView?.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
                 override fun onViewDetachedFromWindow(v: View?) {
                     closeNow()
-                    v?.removeOnAttachStateChangeListener(this)
+                    refView?.removeOnAttachStateChangeListener(this)
                 }
 
                 override fun onViewAttachedToWindow(v: View?) {}
@@ -52,31 +53,31 @@ class Tooltip private constructor(
         }
     }
 
-    internal fun getTextView(): TextView{
-        return tooltipView.childView.getTextView()
+    internal fun getTextView(): TextView?{
+        return tooltipView?.childView?.getTextView()
     }
 
-    internal fun getStartImageView(): ImageView{
-        return tooltipView.childView.getStartImageView()
+    internal fun getStartImageView(): ImageView?{
+        return tooltipView?.childView?.getStartImageView()
     }
 
-    internal fun getEndImageView(): ImageView{
-        return tooltipView.childView.getEndImageView()
+    internal fun getEndImageView(): ImageView?{
+        return tooltipView?.childView?.getEndImageView()
     }
 
     @JvmOverloads fun show(duration: Long = 0, text: String? = null): Tooltip{
-        refView.post {
+        refView?.post {
             closeNow()
 
-            tooltipView.childView.attach()
-            text?.let { getTextView().text = it }
+            tooltipView?.childView?.attach()
+            text?.let { getTextView()?.text = it }
 
-            val tooltipParent = activity.window.decorView as ViewGroup
+            val tooltipParent = activity!!.window.decorView as ViewGroup
             val rect = Rect()
 
-            refView.getGlobalVisibleRect(rect)
+            refView?.getGlobalVisibleRect(rect)
 
-            tooltipView.setup(rect, tooltipParent)
+            tooltipView?.setup(rect, tooltipParent)
 
             val lP = ViewGroup.LayoutParams(
                     tooltipParent.width,
@@ -88,7 +89,7 @@ class Tooltip private constructor(
             if(animIn == 0){
                 displayListener?.onDisplay(tooltipView, true)
             }else{
-                val animation = AnimationUtils.loadAnimation(tooltipView.context, animIn)
+                val animation = AnimationUtils.loadAnimation(tooltipView!!.context, animIn)
 
                 animation.setAnimationListener(object :Animation.AnimationListener{
                     override fun onAnimationRepeat(p0: Animation?) {}
@@ -100,11 +101,11 @@ class Tooltip private constructor(
                     override fun onAnimationStart(p0: Animation?) {}
                 })
 
-                tooltipView.startAnimation(animation)
+                tooltipView?.startAnimation(animation)
             }
 
             if (duration > 0) {
-                tooltipView.postDelayed({ close() }, duration)
+                tooltipView?.postDelayed({ close() }, duration)
             }
         }
 
@@ -112,77 +113,91 @@ class Tooltip private constructor(
     }
 
     fun show(duration: Long, @StringRes text: Int): Tooltip{
-        getTextView().setText(text)
+        getTextView()?.setText(text)
         return show(duration)
     }
 
     fun show(duration: Long, text: Spanned): Tooltip{
-        getTextView().text = text
+        getTextView()?.text = text
         return show(duration)
     }
 
     fun show(@StringRes text: Int): Tooltip{
-        getTextView().setText(text)
+        getTextView()?.setText(text)
         return show()
     }
 
     fun show(text: Spanned): Tooltip{
-        getTextView().text = text
+        getTextView()?.text = text
         return show()
     }
 
     fun show(text: String): Tooltip{
-        getTextView().text = text
+        getTextView()?.text = text
         return show()
     }
 
     fun close(){
         if(animOut == 0){
-            overlay.post { closeNow() }
+            overlay?.post { closeNow() }
         }else{
-            val animation = AnimationUtils.loadAnimation(tooltipView.context, animOut)
+            val animation = AnimationUtils.loadAnimation(tooltipView?.context, animOut)
 
             animation.setAnimationListener(object :Animation.AnimationListener{
                 override fun onAnimationRepeat(p0: Animation?) {}
 
                 override fun onAnimationEnd(p0: Animation?) {
-                    overlay.post { closeNow() }
+                    overlay?.post { closeNow() }
                 }
 
                 override fun onAnimationStart(p0: Animation?) {}
             })
 
-            tooltipView.startAnimation(animation)
+            tooltipView?.startAnimation(animation)
         }
     }
 
     fun closeNow(){
-            val parent = overlay.parent
+        val parent = overlay?.parent
 
-            if (parent != null && parent is ViewGroup) {
-                overlay.post {
-                    parent.removeView(overlay)
-                    displayListener?.onDisplay(tooltipView, false)
-                }
+        if (parent != null && parent is ViewGroup) {
+            overlay?.post {
+                parent.removeView(overlay)
+                displayListener?.onDisplay(tooltipView, false)
             }
+
+            activity = null
+            refView = null
+            targetGhostView?.setOnClickListener(null)
+            (targetGhostView?.parent as? ViewGroup)?.removeView(targetGhostView)
+            targetGhostView = null
+
+            (tooltipView?.parent as? ViewGroup)?.removeView(tooltipView)
+
+            tooltipView?.clear()
+
+            tooltipView = null
+            overlay = null
+        }
     }
 
-    fun isShown() = overlay.parent != null
+    fun isShown() = overlay?.parent != null
 
     internal fun initTargetClone() {
-        val targetGhostView = TargetView(activity)
-        targetGhostView.setTarget(refView)
-        overlay.addView(targetGhostView)
-        targetGhostView.setOnClickListener { refViewClickListener?.onClick(targetGhostView, this)}
+        targetGhostView = TargetView(activity!!)
+
+        targetGhostView?.setTarget(refView)
+        overlay?.addView(targetGhostView)
+        targetGhostView?.setOnClickListener { refViewClickListener?.onClick(targetGhostView, this)}
     }
 
     internal fun setOverlayListener(overlayClickListener: TooltipClickListener){
-        overlay.setOnClickListener { overlayClickListener.onClick(it, this) }
+        overlay?.setOnClickListener { overlayClickListener.onClick(it, this) }
     }
 
     fun moveTooltip(x: Int, y:Int){
-        overlay.translationY -= y
-        overlay.translationX -= x
+        overlay!!.translationY -= y
+        overlay!!.translationX -= x
     }
 
     companion object{

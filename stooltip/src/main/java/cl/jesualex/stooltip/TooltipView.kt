@@ -24,7 +24,7 @@ class TooltipView : FrameLayout {
     private lateinit var parentRect: Rect
     private lateinit var rect: Rect
 
-    internal lateinit var childView: ChildView
+    internal var childView: ChildView? = null
     internal var borderPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal var corner = 0
     internal var paddingT = 0
@@ -57,11 +57,17 @@ class TooltipView : FrameLayout {
         init(context, attrs, defStyleAttr)
     }
 
+    fun clear(){
+        childView?.clear()
+        childView = null
+        (parent as? ViewGroup)?.removeView(this)
+    }
+
     fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int){
         setWillNotDraw(false)
 
         this.childView = ChildView(context, attrs, defStyleAttr)
-        childView.getTextView().setTextColor(Color.WHITE)
+        childView!!.getTextView().setTextColor(Color.WHITE)
         addView(childView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         val res = context.resources

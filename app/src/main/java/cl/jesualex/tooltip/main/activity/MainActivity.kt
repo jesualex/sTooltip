@@ -1,36 +1,40 @@
 package cl.jesualex.tooltip.main.activity
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import cl.jesualex.stooltip.DisplayListener
 import cl.jesualex.stooltip.Position
 import cl.jesualex.stooltip.Tooltip
+import cl.jesualex.stooltip.Tooltip.Companion.on
+import cl.jesualex.stooltip.TooltipClickListener
 import cl.jesualex.tooltip.R
 import cl.jesualex.tooltip.main.fragment.ExampleFragment
-
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_content.*
 
+
 class MainActivity : AppCompatActivity() {
+    var tooltip: Tooltip? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         setSupportActionBar(toolbar)
 
         showTooltipButton.setOnClickListener {
-            Tooltip.on(exampleTextView)
-                .text(R.string.example)
-                .iconStart(android.R.drawable.ic_dialog_info)
-                .iconStartSize(30, 30)
+            val text =  "a long string : xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxxxxxxxx xxxxxx xxxxxx xxxxxx xxxxxx xxxxxx"
+            on(exampleTextView, false)
+                .text(text)
+                .textGravity(Gravity.CENTER_HORIZONTAL)
                 .color(resources.getColor(R.color.colorPrimary))
-                .overlay(resources.getColor(R.color.overlay))
-                .iconEnd(android.R.drawable.ic_dialog_info)
-                .iconEndSize(30, 30)
-                .border(Color.BLACK, 5f)
+                .border(0, 0f)
                 .clickToHide(true)
-                .corner(10)
-                .position(Position.END)
-                .show(3000)
+                //.corner(dp8)
+                //.arrowSize(dp8, (dp8 * 1.4f) as Int)
+                .position(Position.TOP)
+                .show()
         }
 
         addFragmentButton.setOnClickListener {

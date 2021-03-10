@@ -15,9 +15,9 @@ import androidx.annotation.RequiresApi
  * Created by jesualex on 2019-04-29.
  */
 class ChildView : LinearLayout {
-    private lateinit var textView: TextView
-    private lateinit var iconStart: ImageView
-    private lateinit var iconEnd: ImageView
+    private var textView: TextView? = null
+    private var iconStart: ImageView? = null
+    private var iconEnd: ImageView? = null
 
     @JvmOverloads constructor(
             context: Context,
@@ -38,32 +38,42 @@ class ChildView : LinearLayout {
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         textView = TextView(context, attrs, defStyleAttr)
-        textView.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+        textView!!.layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         iconStart = ImageView(context, attrs, defStyleAttr)
-        iconStart.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        iconStart!!.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         iconEnd = ImageView(context, attrs, defStyleAttr)
-        iconEnd.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        iconEnd!!.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
     fun getTextView(): TextView {
-        return textView
+        return textView!!
     }
 
     fun getStartImageView(): ImageView {
-        return iconStart
+        return iconStart!!
     }
 
     fun getEndImageView(): ImageView {
-        return iconEnd
+        return iconEnd!!
+    }
+
+    fun clear(){
+        iconStart?.let { removeParent(it) }
+        iconStart = null
+        iconEnd?.let { removeParent(it) }
+        iconEnd = null
+        textView?.let { removeParent(it) }
+        textView = null
+        removeParent(this)
     }
 
     fun attach(){
-        removeParent(iconStart)
-        removeParent(iconEnd)
-        removeParent(textView)
+        removeParent(iconStart!!)
+        removeParent(iconEnd!!)
+        removeParent(textView!!)
 
-        if(iconStart.drawable != null){
-            val iconLP = iconStart.layoutParams as LayoutParams
+        if(iconStart!!.drawable != null){
+            val iconLP = iconStart!!.layoutParams as LayoutParams
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 iconLP.marginEnd = context.resources.getDimensionPixelSize(R.dimen.iconTextMargin)
@@ -75,12 +85,12 @@ class ChildView : LinearLayout {
             addView(iconStart, iconLP)
         }
 
-        val textLP = textView.layoutParams as LayoutParams
+        val textLP = textView!!.layoutParams as LayoutParams
         textLP.gravity = Gravity.CENTER
         addView(textView, textLP)
 
-        if(iconEnd.drawable != null){
-            val iconLP = iconEnd.layoutParams as LayoutParams
+        if(iconEnd!!.drawable != null){
+            val iconLP = iconEnd!!.layoutParams as LayoutParams
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 iconLP.marginStart = context.resources.getDimensionPixelSize(R.dimen.iconTextMargin)

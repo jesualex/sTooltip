@@ -13,12 +13,10 @@
         android:id="@+id/exampleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="50dp"
         android:text="@string/example"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/showTooltipButton"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/showTooltipButton"
